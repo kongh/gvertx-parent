@@ -1,0 +1,29 @@
+runmode : prod
+
+jvm :
+  - -Dsun.rmi.dgc.server.gcInterval=3600000
+  - -server -Xms1024m -Xmx1024m -XX:NewSize=256m
+  - -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5555
+
+application:
+    name : dd
+    host : www.baidu.com
+    language : zh-cmn-Hans
+    encoding : UTF-8
+    path : /home/admin/deploy
+
+cookie :
+    prefix : prefix_cookie
+    domain : .test.wzq.com
+    encryption_secret : ssss
+    expire_time_in_seconds : 86400
+
+
+deploy :
+    username : admin
+    password : 123
+    host : wangziqing.cc
+
+nginx :
+    path : /home/admin/tengine-2.1.2/conf
+
