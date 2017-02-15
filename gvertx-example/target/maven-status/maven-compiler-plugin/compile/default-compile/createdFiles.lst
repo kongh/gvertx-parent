@@ -3,6 +3,8 @@ util/Runner$JSHelloWorldRunner.class
 util/Runner$RubyTemplatingRunner.class
 util/Runner$JSAuthRunner.class
 util/Runner$JSTemplatingRunner.class
+conf/Module.class
+conf/Routes.class
 util/Runner$GroovyHelloWorldRunner.class
 util/Runner$RubyRealtimeRunner.class
 util/Runner$JSRealtimeRunner.class
@@ -11,11 +13,11 @@ util/Runner$RubyHelloWorldRunner.class
 util/Runner$GroovySessionsRunner.class
 util/Runner$GroovyTemplatingRunner.class
 util/Runner$GroovyAuthJDBC.class
+controllers/TestController.class
 util/Runner$RubyAuthJDBC.class
 util/Runner$GroovyChatRunner.class
 util/Runner$RubyAuthRunner.class
 util/Runner$RubyChatRunner.class
-conf/Verticle.class
 util/Runner$JSSessionsRunner.class
 util/Runner$JSAuthJDBC.class
 util/Runner$GroovyRealtimeRunner.class

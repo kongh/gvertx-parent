@@ -23,6 +23,7 @@
 
     <modules>
         <module>gvertx-example</module>
+        <module>gvertx-core</module>
     </modules>
 
 </project>
