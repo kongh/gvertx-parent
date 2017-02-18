@@ -72,9 +72,6 @@ public class Gvertx {
         };
 
         String verticleID = GuiceVerticleFactory.PREFIX + ":" + Gverticle.class.getName();
-
-        System.out.println(verticleID);
-
         runner = vertex -> {
             try {
                 if (deploymentOptions != null) {

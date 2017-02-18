@@ -24,6 +24,9 @@
 package com.gvertx.core.guice;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
+import com.gvertx.core.Grouter;
+import com.gvertx.core.GrouterImpl;
 import io.vertx.core.Vertx;
 
 /**
@@ -43,5 +46,6 @@ public class GuiceVertxBinder extends AbstractModule {
     @Override
     protected void configure() {
         bind(Vertx.class).toInstance(vertx);
+        bind(Grouter.class).to(GrouterImpl.class).in(Singleton.class);
     }
 }

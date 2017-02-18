@@ -1,12 +1,12 @@
 package com.gvertx.core;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.core.http.HttpServer;
 import io.vertx.rxjava.ext.web.Router;
+import io.vertx.rxjava.ext.web.handler.CookieHandler;
 
 /**
  * Created by wangziqing on 17/2/15.
@@ -19,16 +19,24 @@ public class Gverticle extends AbstractVerticle {
     static final int port = 8080;
 
     @Inject
-    private Injector injector;
+    private Grouter grouter;
+
+    public void clearUser() {
+    }
+
     @Override
     public void start() throws Exception {
         Router router = Router.router(vertx);
+
+        router.route().handler(CookieHandler.create());
         if (doesClassExist(CONF_ROUTES)) {
-            final Class<? extends ApplicationVertxRoutes> routes =
-                    (Class<? extends ApplicationVertxRoutes>) Class.forName(CONF_ROUTES);
-            ApplicationVertxRoutes applicationVertxRoutes = routes.newInstance();
-            injector.injectMembers(applicationVertxRoutes);
-            applicationVertxRoutes.init(router);
+            final Class<? extends ApplicationRoutes> routes =
+                    (Class<? extends ApplicationRoutes>) Class.forName(CONF_ROUTES);
+
+            routes.newInstance().init(grouter);
+            long s = System.currentTimeMillis();
+            grouter.compileRoutes(router);
+            System.out.println("耗时:"+ (System.currentTimeMillis()-s));
         }
         HttpServer httpServer = vertx.createHttpServer();
         httpServer.requestHandler(router::accept).
