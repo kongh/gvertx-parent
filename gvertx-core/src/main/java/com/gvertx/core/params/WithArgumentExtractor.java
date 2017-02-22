@@ -32,5 +32,5 @@ public @interface WithArgumentExtractor {
     /**
      * The argument extractor that should be used with this annotation
      */
-    Class<? extends ArgumentExtractor<?>> value();
+    Class<? extends ArgumentExtractor> value();
 }

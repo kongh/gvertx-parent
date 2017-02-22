@@ -5,10 +5,13 @@ package com.gvertx.core.constant;
  */
 public interface HttpConstant {
     enum  Method{
-        POST("post"),
-        GET("get"),
-        PUT("put"),
-        DELETE("delete");
+        POST("POST"),
+        GET("GET"),
+        PUT("PUT"),
+        PATCH("PATCH"),
+        DELETE("DELETE"),
+        OPTIONS("OPTIONS"),
+        HEAD("HEAD");
 
         private String method;
         Method(String method){

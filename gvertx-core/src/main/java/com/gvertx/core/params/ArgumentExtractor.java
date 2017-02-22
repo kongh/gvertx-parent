@@ -1,10 +1,10 @@
 package com.gvertx.core.params;
 
-import io.vertx.rxjava.ext.web.RoutingContext;
+import com.gvertx.core.models.Context;
 
 /**
  * Created by wangziqing on 17/2/18.
  */
-public interface ArgumentExtractor<T> {
-    T extract(RoutingContext routingContext);
+public interface ArgumentExtractor<T>{
+    void extract(ArgumentExtractorChain<T> argumentExtractorChain,Context context);
 }

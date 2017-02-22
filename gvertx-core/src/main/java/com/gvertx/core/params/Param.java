@@ -16,6 +16,8 @@
 
 package com.gvertx.core.params;
 
+import com.gvertx.core.extractors.ParamExtractor;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,7 +31,7 @@ import java.lang.annotation.Target;
  * @author ra
  *
  */
-//@WithArgumentExtractor(ArgumentExtractors.ParamExtractor.class)
+@WithArgumentExtractor(ParamExtractor.class)
 //@WithArgumentExtractors({
 //    ArgumentExtractors.FileItemParamExtractor.class,
 //    ArgumentExtractors.FileParamExtractor.class,

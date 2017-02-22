@@ -82,7 +82,7 @@ public class GuiceVerticleFactory implements VerticleFactory {
 //            throw new IllegalStateException("Could not find GuiceVerticleLoader constructor");
 //        }
 
-        return new GuiceVerticleLoader(verticleName, classLoader, getInjector());
+        return new GuiceVerticleLoader(verticleName, classLoader, null);
     }
 
     protected Injector createInjector() {

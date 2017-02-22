@@ -26,6 +26,18 @@ public class Gverticle extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
+//        vertx.createHttpServer().requestHandler(request -> {
+//            HttpServerResponse response = request.response();
+//            if (request.method() == HttpMethod.PUT) {
+//                response.setChunked(true);
+//                Pump.pump(request, response).start();
+//                request.endHandler(v -> response.end());
+//            } else {
+//                response.setStatusCode(400).end();
+//            }
+//        }).listen(8080);
+
+
         Router router = Router.router(vertx);
 
         router.route().handler(CookieHandler.create());
@@ -45,6 +57,12 @@ public class Gverticle extends AbstractVerticle {
                         server -> log.info(String.format("Server is now listening. %s  Thread:%s ", "http://localhost:"+port, Thread.currentThread())),
                         failure -> log.info(String.format("Server could not start. Thread:%s", Thread.currentThread()), failure)
                 );
+
+
+        Runtime runtime = Runtime.getRuntime();
+        System.out.println(runtime.freeMemory());
+        System.out.println(runtime.maxMemory());
+        System.out.println(runtime.totalMemory());
     }
 
     protected boolean doesClassExist(String nameWithPackage) {

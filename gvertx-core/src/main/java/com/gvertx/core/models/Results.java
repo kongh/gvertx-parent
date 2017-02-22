@@ -170,8 +170,8 @@ public class Results {
         return result;
     }
 
-//    public static AsyncResult async() {
-//        return new AsyncResult();
+//    public static Extractor async() {
+//        return new Extractor();
 //    }
 
 }
