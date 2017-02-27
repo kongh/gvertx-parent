@@ -28,21 +28,17 @@ public class Route {
     private String methodName;
     private ArgumentExtractor[] argumentExtractors;
 
-    private boolean isBlock;
-
     public Object invoke(Object[] parameters){
         return this.methodAccess.invoke(this.invokeObj,
                 this.methodName,
                 parameters);
     }
 
-    public Route(Object invokeObj,MethodAccess methodAccess,String methodName,ArgumentExtractor[] argumentExtractors,
-                 boolean isBlock){
+    public Route(Object invokeObj,MethodAccess methodAccess,String methodName,ArgumentExtractor[] argumentExtractors){
         this.invokeObj = invokeObj;
         this.methodAccess = methodAccess;
         this.methodName = methodName;
         this.argumentExtractors = argumentExtractors;
-        this.isBlock = isBlock;
     }
 
     public ArgumentExtractor[] getArgumentExtractors() {
@@ -77,7 +73,4 @@ public class Route {
         this.methodName = methodName;
     }
 
-    public boolean getIsBlock() {
-        return isBlock;
-    }
 }

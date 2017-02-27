@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public abstract class WriteHelp {
 
-    public static void end(RoutingContext routingContext, Result result, Vertx vertx){
+    public final static void end(RoutingContext routingContext, Result result, Vertx vertx){
         result.getObservable()
                 .subscribeOn(RxHelper.blockingScheduler(vertx)).observeOn(RxHelper.scheduler(vertx))
                 .subscribe(new Subscriber<Object>() {
@@ -37,7 +37,6 @@ public abstract class WriteHelp {
 
                     @Override
                     public void onNext(Object object) {
-                        System.out.println(String.format("onNext:%s,activeCount:%s", Thread.currentThread().getName(), Thread.activeCount()));
                         if (null == this.resultObj) {
                             this.resultObj = object;
                         } else {

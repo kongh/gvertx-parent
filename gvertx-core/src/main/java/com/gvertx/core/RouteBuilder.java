@@ -5,5 +5,4 @@ package com.gvertx.core;
  */
 public interface RouteBuilder {
     void with(Class<?> controller, String s);
-    void blockingWith(Class<?> controller, String s);
 }

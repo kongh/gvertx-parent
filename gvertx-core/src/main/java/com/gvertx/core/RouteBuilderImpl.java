@@ -28,7 +28,6 @@ public class RouteBuilderImpl implements RouteBuilder {
     private Class controller;
     private Method controllerMethod;
 
-    private boolean isBlock;
 
     public RouteBuilderImpl(HttpConstant.Method httpMethod) {
         this.httpMethod = httpMethod;
@@ -41,16 +40,11 @@ public class RouteBuilderImpl implements RouteBuilder {
 
     @Override
     public void with(Class<?> controller, String s) {
-        this.controllerMethod = verifyThatControllerAndMethodExists(controller, s, isBlock);
+        this.controllerMethod = verifyThatControllerAndMethodExists(controller, s);
         this.controller = controller;
     }
 
-    @Override
-    public void blockingWith(Class<?> controller, String s) {
-        this.isBlock = true;
-        this.controllerMethod = verifyThatControllerAndMethodExists(controller, s, isBlock);
-        this.controller = controller;
-    }
+
 
     public RouteBuilderImpl buildRoute(Injector injector) {
         if (controller == null) {
@@ -67,7 +61,7 @@ public class RouteBuilderImpl implements RouteBuilder {
         if (filterWith != null) {
             filters.addAll(Arrays.asList(filterWith.value()));
         }
-        Route route = ArgumentExtractors.build(controller, controllerMethod, isBlock, injector);
+        Route route = ArgumentExtractors.build(controller, controllerMethod, injector);
 
         int lastindex = -1;
         for (int i = route.getArgumentExtractors().length - 1; i >= 0; i--) {
@@ -147,7 +141,7 @@ public class RouteBuilderImpl implements RouteBuilder {
 
 
     static private Method verifyThatControllerAndMethodExists(Class controller,
-                                                              String controllerMethod, boolean isBlock) {
+                                                              String controllerMethod) {
         try {
 
             Method methodFromQueryingClass = null;

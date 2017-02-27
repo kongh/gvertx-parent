@@ -5,6 +5,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.ext.web.Router;
+import io.vertx.rxjava.ext.web.handler.BodyHandler;
 import io.vertx.rxjava.ext.web.handler.CookieHandler;
 
 /**
@@ -24,6 +25,8 @@ public class Gverticle extends AbstractVerticle {
     public void start() throws Exception {
         Router router = Router.router(vertx);
         router.route().handler(CookieHandler.create());
+        router.route().handler(BodyHandler.create());
+
         if (doesClassExist(CONF_ROUTES)) {
             final Class<? extends ApplicationRoutes> routes =
                     (Class<? extends ApplicationRoutes>) Class.forName(CONF_ROUTES);
@@ -36,7 +39,6 @@ public class Gverticle extends AbstractVerticle {
                         server -> log.info(String.format("Server is now listening. %s  Thread:%s ", "http://localhost:" + port, Thread.currentThread())),
                         failure -> log.info(String.format("Server could not start. Thread:%s", Thread.currentThread()), failure)
                 );
-
 
         Runtime runtime = Runtime.getRuntime();
         System.out.println("freeMemory:" + runtime.freeMemory());

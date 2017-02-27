@@ -161,7 +161,6 @@ public class ArgumentExtractors {
 
     static public Route build(Class controller,
                               Method functionalMethod,
-                              boolean isBlock,
                               Injector injector) {
         // get both the parameters...
         final Type[] genericParameterTypes = functionalMethod.getGenericParameterTypes();
@@ -180,7 +179,7 @@ public class ArgumentExtractors {
         return new Route(injector.getInstance(controller),
                 MethodAccess.get(controller),
                 functionalMethod.getName(),
-                argumentExtractors,isBlock);
+                argumentExtractors);
     }
 
 
