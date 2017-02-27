@@ -27,12 +27,16 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
-import io.vertx.core.*;
+import io.vertx.core.Context;
+import io.vertx.core.Future;
+import io.vertx.core.Verticle;
+import io.vertx.core.Vertx;
 import io.vertx.core.impl.verticle.CompilingClassLoader;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.rxjava.core.AbstractVerticle;
 
 import java.util.ArrayList;
 import java.util.List;

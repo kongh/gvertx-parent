@@ -1,5 +1,6 @@
 package com.gvertx.core.models;
 
+
 import io.vertx.rxjava.core.buffer.Buffer;
 import io.vertx.rxjava.core.http.HttpServerRequest;
 import io.vertx.rxjava.ext.web.Cookie;
@@ -16,10 +17,12 @@ public class Context {
 
     private RoutingContext routingContext;
     private HttpServerRequest httpServerRequest;
+    private Object[] parameters;
 
-    public Context(RoutingContext routingContext){
+    public Context(RoutingContext routingContext,Object[] parameters){
         this.routingContext = routingContext;
         this.httpServerRequest = routingContext.request();
+        this.parameters = parameters;
     }
 
     public Buffer getBody() {
@@ -72,5 +75,13 @@ public class Context {
 
     public RoutingContext getRoutingContext(){
         return this.routingContext;
+    }
+
+    public Object[] getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Object[] parameters) {
+        this.parameters = parameters;
     }
 }

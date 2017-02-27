@@ -20,16 +20,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.gvertx.core.utils.DateUtil;
-import com.gvertx.core.utils.SwissKnife;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class Result {
-    
-    private final Logger logger = LoggerFactory.getLogger(Result.class);
 
     // /////////////////////////////////////////////////////////////////////////
     // HTTP Status codes (for convenience)
@@ -93,10 +90,6 @@ public class Result {
 
     private Class<?> jsonView;
 
-    /* The object that will be rendered. Could be a Java Pojo. Or a map. Or xyz. Will be
-     * handled by the TemplateReneringEngine. */
-    private Object renderable;
-
     /**
      * Something like: "text/html" or "application/json"
      */
@@ -134,6 +127,8 @@ public class Result {
 
     private String template;
 
+    private rx.Observable observable;
+
     /**
      * A result. Sets utf-8 as charset and status code by default. 
      * Refer to {@link Result#SC_200_OK}, {@link Result#SC_204_NO_CONTENT} and so on
@@ -148,174 +143,18 @@ public class Result {
         this.headers = Maps.newHashMap();
     }
 
-    public Object getRenderable() {
-        return renderable;
+
+
+    public Result render(rx.Observable observable){
+        if (this.observable == null) {
+            this.observable = observable;
+        }else{
+            this.observable = this.observable.concatWith(observable);
+        }
+        return this;
     }
 
-    /**
-     * This method handles two principal cases:
-     * 1) If the this.renderable of this result is null, the object passed is simply set as renderable 
-     *    for this Result
-     * 2) If the this.renderable of this result is not null an new map is generated as
-     *    object to render and both the former renderable and the new object added to the map. 
-     *    The former object is gets the class name in camelCase as key.
-     *    
-     * If the converted camelCase key of this object already exists an {@link IllegalArgumentException}
-     * is being thrown.
-     * 
-     * @param object The object to add (either an arbitrary class or Renderable).
-     * @return Result this result for chaining.
-     * 
-     */
-    public Result render(Object object) {
-        
-        if (this.renderable == null) {
-            
-            this.renderable = object;
-            
-        } else {
-            
-            assertObjectNoRenderableOrThrowException(this.renderable);
-            
-            Map<String, Object> map;
-            
-            // prepare the this.renderable as we now have at least two
-            // objects to render
-            if (this.renderable instanceof Map) {
-               map = (Map) this.renderable;
-                
-            } else {
-                map = Maps.newHashMap();
-                // add original this.renderable
-                map.put(SwissKnife.getRealClassNameLowerCamelCase(this.renderable), this.renderable);
-                this.renderable = map;
-                
-            }
-            
-            // add object of this method
-            String key = SwissKnife.getRealClassNameLowerCamelCase(object);
-            if (map.containsKey(key)) {
-                throw new IllegalArgumentException(
-                        String.format(
-                              "Cannot store object with default name %s."
-                              + "An object with the same name is already stored."
-                              + "Consider using render(key, value) to name objects implicitly.",
-                              key));
-                
-            } else {
-                map.put(SwissKnife.getRealClassNameLowerCamelCase(object), object);
-            }
-            
-            
-        }
-        
-        
-        return this;
-    }
-    
-    /**
-     * Replaces the object being passed by this result to the rendering engine
-     * with this map. It will overwrite any previously set render(...) calls.
-     * 
-     * @param mapToRender The map being passed to the templating engine.
-     * @return This Result for chaining.
-     */
-    public Result render(Map<String, Object> mapToRender) {
-        this.renderable = mapToRender;
-        return this;        
-    }
-    
-    /**
-     * Handles following cases:
-     * 1) If this.renderable is null: a new HashMap is generated and this entry being added
-     *    to the map.
-     * 2) If this.renderable is a Map: the entry is added
-     * 3) If this.renderable is an object (not a renderable): a Map is generated and both
-     *    the former object and the new entry are being added.
-     * 4) If this.renderable is a Renderable: an {@link IllegalArgumentException} is thrown.
-     * 
-     * If the entry key already exists in the map of this.renderable an {@link IllegalArgumentException}
-     * is thrown.
-     * 
-     * @param entry The entry to add.
-     * @return The result for further chaining.
-     */
-    public Result render(Entry<String, Object> entry) {
-        
-        if (this.renderable == null) {
-        
-            Map<String, Object> map = Maps.newHashMap();
-            this.renderable = map;
-            map.put(entry.getKey(), entry.getValue());
-        } else {
-            
-            assertObjectNoRenderableOrThrowException(this.renderable);
-            
-            Map<String, Object> map;
-            if (this.renderable instanceof Map) {
-                
-                map = (Map) this.renderable;
-                if (map.containsKey(entry.getKey())) {
-                    throw new IllegalArgumentException(
-                           String.format(
-                                 "Entry with key %s already stored inside this Result object. "
-                                 + "This is currently not supported and does not make sense. "
-                                 +  "Consider using your own map.",
-                                         entry.getKey()));
-                } else { 
-                    map.put(entry.getKey(), entry.getValue());
-                
-                }
-                
-            } else {                
-                map = Maps.newHashMap();
-                map.put(
-                        SwissKnife.getRealClassNameLowerCamelCase(this.renderable),
-                        this.renderable);
-                
-                this.renderable = map;
-                              
-            }
-            
-            map.put(entry.getKey(), entry.getValue());
-            
-        }
-        
-        
-        return this;
-        
-        
-    }
-    
-    /**
-     * Sets this renderable as object to render. Usually this renderable
-     * does rendering itself and will not call any templating engine. 
-     * 
-     * @param renderable The renderable that will handle everything after returing the result.
-     * @return This result for chaining.
-     */
-    public Result render(Renderable renderable) {
-        this.renderable = renderable;
-        return this;        
-    }
-    
-    /**
-     * Implicitly generates a hashmap as object being rendered and adds
-     * this key, value pair. If the object being rendered is already a hashmap
-     * it simply adds this key value pair to it.
-     * 
-     * @param key The key to use.
-     * @param value The value to use.
-     * @return The Result for chaining.
-     */
-    public Result render(String key, Object value) {
-        
-        render(new AbstractMap.SimpleEntry<String, Object>(key, value));
-            
-        return this;
-        
-    }
-    
+
 
     /**
      * This method directly renders the String to the output. It completely
@@ -695,25 +534,13 @@ public class Result {
      * @return this result for chaining.
      */
     public Result doNotCacheContent() {
-        
         addHeader(CACHE_CONTROL, CACHE_CONTROL_DEFAULT_NOCACHE_VALUE);
         addHeader(DATE, DateUtil.formatForHttpHeader(System.currentTimeMillis()));
         addHeader(EXPIRES, DateUtil.formatForHttpHeader(0L));
-        
         return this;
-        
-    } 
-    
-    
-    private void assertObjectNoRenderableOrThrowException(Object object) {
-        if (object instanceof Renderable) {
-            throw new IllegalArgumentException(
-                    "You already want to render a Renderable class. " +
-                "Adding more items to render is not supported.");
-            
-        }
     }
-    
-  
 
+    public rx.Observable getObservable() {
+        return observable;
+    }
 }

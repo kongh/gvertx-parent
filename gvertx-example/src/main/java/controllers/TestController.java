@@ -6,8 +6,7 @@ import com.gvertx.core.models.Results;
 import com.gvertx.core.params.FilterWith;
 import com.gvertx.core.params.Param;
 import filters.TestFilter;
-import models.CurrentRequest;
-import models.ReqContext;
+import rx.Observable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,31 +19,34 @@ import java.util.Map;
 public class TestController {
 
 
-    public Result hello(@Param("id") String id,
-                        @Param("a") String a,
-                        @Param("b") String b,
-                        @Param("c") String c,
-                        @Param("d") String d,
-                        @Param("e") String e,
-                        @Param("f") String f,
-                        @Param("g") String g,
-                        @Param("h") String h,
-                        @Param("i") String i) {
-//        System.out.println(++k);
-        Map map = new HashMap<>();
-        map.put("id",id);
-        return Results.ok().json().render(map);
+    private String slowBlockingMethod() {
+        try {
+            System.out.println(String.format("subscribeOn:%s,activeCount:%s", Thread.currentThread().getName(), Thread.activeCount()));
+            Thread.sleep(2000l);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "aaa";
+    }
+
+    //@FilterWith(MethFilter.class)
+    public Result hello(@Param("name") String name) throws InterruptedException {
+        User user = new User();
+        user.setPass("ww");
+        user.setName("ee");
+        Map m = new HashMap<>();
+        m.put("ww","dd");
+        m.put("e","e");
+        return Results.json()
+                .render(Observable.just("x1",false))
+                .render(Observable.just(1))
+                .render(Observable.just(m))
+                .render(Observable.just(user));
     }
 
 
-    public Result tt(@CurrentRequest ReqContext name) {
 
-        return null;
-    }
-
-
-
-    public class User{
+    public class User {
         private String name;
         private String pass;
 

@@ -113,34 +113,7 @@
         </plugins>
     </build>
     <dependencies>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-core</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
 
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-rx-java</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.esotericsoftware.reflectasm</groupId>
-            <artifactId>reflectasm</artifactId>
-            <version>1.09</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.gvertx.core</groupId>
-            <artifactId>gvertx-core</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.gvertx.core</groupId>
             <artifactId>gvertx-core</artifactId>

@@ -16,27 +16,15 @@
 
 package com.gvertx.core.params;
 
-import com.gvertx.core.extractors.ParamExtractor;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Just an idea to inject parameters right into the methods...
- * 
- * This equals context.getParameter(...)
- *  
- * @author ra
+ * @author wangziqing
  *
  */
-@WithArgumentExtractor(ParamExtractor.class)
-//@WithArgumentExtractors({
-//    ArgumentExtractors.FileItemParamExtractor.class,
-//    ArgumentExtractors.FileParamExtractor.class,
-//    ArgumentExtractors.InputStreamParamExtractor.class
-//})
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER})
 public @interface Param {

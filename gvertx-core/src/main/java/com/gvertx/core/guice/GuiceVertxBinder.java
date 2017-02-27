@@ -27,7 +27,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.gvertx.core.Grouter;
 import com.gvertx.core.GrouterImpl;
-import io.vertx.core.Vertx;
+import io.vertx.rxjava.core.Vertx;
+import io.vertx.rxjava.core.eventbus.EventBus;
 
 /**
  * Guice {@link AbstractModule} for vertx and container injections
@@ -47,5 +48,6 @@ public class GuiceVertxBinder extends AbstractModule {
     protected void configure() {
         bind(Vertx.class).toInstance(vertx);
         bind(Grouter.class).to(GrouterImpl.class).in(Singleton.class);
+        bind(EventBus.class).toInstance(vertx.eventBus());
     }
 }

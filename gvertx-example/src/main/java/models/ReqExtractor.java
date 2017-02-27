@@ -12,19 +12,17 @@ import io.vertx.core.Vertx;
 public class ReqExtractor implements ArgumentExtractor<ReqContext> {
 
     private CurrentRequest currentRequest;
-    private Vertx vertx;
+
 
     @Inject
-    public ReqExtractor(CurrentRequest currentRequest,Vertx vertx){
+    public ReqExtractor(CurrentRequest currentRequest){
         this.currentRequest = currentRequest;
-        this.vertx = vertx;
     }
 
 
     @Override
     public void extract(ArgumentExtractorChain<ReqContext> extractorChain, Context context) {
         System.out.println(currentRequest);
-        System.out.println(vertx);
         extractorChain.next(context,new ReqContext("hello extractor"));
     }
 

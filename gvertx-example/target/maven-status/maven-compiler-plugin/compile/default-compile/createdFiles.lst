@@ -3,6 +3,7 @@ controllers/TestController.class
 models/ReqExtractor2.class
 conf/Module.class
 models/CurrentRequest.class
+filters/MethFilter.class
 conf/Routes.class
 models/CurrentRequest2.class
 controllers/AbcController.class

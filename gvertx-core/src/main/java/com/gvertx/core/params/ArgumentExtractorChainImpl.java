@@ -1,37 +1,36 @@
 package com.gvertx.core.params;
 
-import com.gvertx.core.ResultWrite;
+import com.gvertx.core.utils.WriteHelp;
 import com.gvertx.core.models.Context;
-import com.gvertx.core.models.EndModel;
 import com.gvertx.core.models.Result;
+import io.vertx.rxjava.core.Vertx;
 
 /**
  * Created by wangziqing on 17/2/20.
  */
-public class ArgumentExtractorChainImpl<T> extends ResultWrite implements ArgumentExtractorChain<T> {
+public class ArgumentExtractorChainImpl<T> implements ArgumentExtractorChain<T> {
     private final ArgumentExtractor argumentExtractor;
     private final ArgumentExtractorChain next;
     private final int index;
-    private final EndModel endModel;
+    private final Vertx vertx;
 
-
-    public ArgumentExtractorChainImpl(ArgumentExtractor argumentExtractor, EndModel endModel, int index, ArgumentExtractorChain next) {
+    public ArgumentExtractorChainImpl(ArgumentExtractor argumentExtractor, int index, ArgumentExtractorChain next, Vertx vertx) {
         this.argumentExtractor = argumentExtractor;
         this.next = next;
         this.index = index;
-        this.endModel = endModel;
+        this.vertx = vertx;
     }
 
     @Override
     public void next(Context context, T t) {
         if (null != t) {
-            endModel.getParameterObjs()[index] = t;
+            context.getParameters()[index] = t;
         }
         argumentExtractor.extract(next, context);
     }
 
     @Override
     public void end(Context context, Result result) {
-        writeResult(context.getRoutingContext().response(), result);
+        WriteHelp.end(context.getRoutingContext(), result, vertx);
     }
 }
