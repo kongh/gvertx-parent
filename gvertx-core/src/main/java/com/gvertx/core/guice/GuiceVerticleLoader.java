@@ -79,6 +79,7 @@ public class GuiceVerticleLoader extends AbstractVerticle {
             realVerticle.init(vertx, context);
 
         } catch (Throwable t) {
+            t.printStackTrace();
             if (t instanceof RuntimeException) {
                 throw (RuntimeException) t;
             }

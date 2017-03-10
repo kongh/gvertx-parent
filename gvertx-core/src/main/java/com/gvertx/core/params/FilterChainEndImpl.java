@@ -4,6 +4,7 @@ import com.gvertx.core.utils.WriteHelp;
 import com.gvertx.core.models.Context;
 import com.gvertx.core.models.Result;
 import io.vertx.rxjava.core.Vertx;
+import io.vertx.rxjava.ext.web.templ.ThymeleafTemplateEngine;
 
 
 /**
@@ -15,9 +16,12 @@ public class FilterChainEndImpl implements FilterChain {
 
     private final Vertx vertx;
 
-    public FilterChainEndImpl(ArgumentExtractorChain extractorChain,Vertx vertx) {
+    private final ThymeleafTemplateEngine engine;
+
+    public FilterChainEndImpl(ArgumentExtractorChain extractorChain,Vertx vertx, ThymeleafTemplateEngine engine) {
         this.extractorChain = extractorChain;
         this.vertx = vertx;
+        this.engine = engine;
     }
 
     @Override
@@ -27,7 +31,7 @@ public class FilterChainEndImpl implements FilterChain {
 
     @Override
     public void end(Context context, Result result) {
-        WriteHelp.end(context.getRoutingContext(),result,vertx);
+        WriteHelp.end(context.getRoutingContext(),result,vertx, engine);
     }
 
 }

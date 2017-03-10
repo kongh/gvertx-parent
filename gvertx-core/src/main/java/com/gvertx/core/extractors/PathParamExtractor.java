@@ -1,27 +1,31 @@
 package com.gvertx.core.extractors;
 
+import com.google.inject.Inject;
 import com.gvertx.core.models.Context;
+import com.gvertx.core.params.ArgumentClassHolder;
 import com.gvertx.core.params.ArgumentExtractor;
 import com.gvertx.core.params.ArgumentExtractorChain;
+import com.gvertx.core.params.Param;
 
 /**
  * Created by wangziqing on 17/2/22.
  */
 public class PathParamExtractor implements ArgumentExtractor<Object> {
 
-    private String paramName;
+    private final ArgumentClassHolder argumentClassHolder;
 
-    private Class<?> parameterClass;
+    private final Param param;
 
-    public PathParamExtractor(String paramName, Class<?> parameterClass) {
-        this.paramName = paramName;
-        this.parameterClass = parameterClass;
+    @Inject
+    public PathParamExtractor(Param param,ArgumentClassHolder argumentClassHolder) {
+        this.param = param;
+        this.argumentClassHolder = argumentClassHolder;
     }
 
 
     @Override
     public void extract(ArgumentExtractorChain<Object> argumentExtractorChain, Context context) {
-        argumentExtractorChain.next(context,context.getRoutingContext().pathParam(paramName));
+        argumentExtractorChain.next(context,context.getRoutingContext().pathParam(param.value()));
     }
 
 }

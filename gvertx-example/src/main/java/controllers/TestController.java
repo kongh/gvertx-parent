@@ -1,14 +1,15 @@
 package controllers;
 
 import com.google.inject.Singleton;
+import com.gvertx.core.models.Context;
 import com.gvertx.core.models.Result;
 import com.gvertx.core.models.Results;
 import com.gvertx.core.params.FilterWith;
 import com.gvertx.core.params.Param;
 import filters.TestFilter;
+import io.vertx.core.json.JsonObject;
 import rx.Observable;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,22 +31,27 @@ public class TestController {
     }
 
     //@FilterWith(MethFilter.class)
-    public Result hello(@Param("name") String name) throws InterruptedException {
-        User user = new User();
-        user.setPass("ww");
-        user.setName("ee");
-        Map m = new HashMap<>();
-        m.put("ww","dd");
-        m.put("e","e");
-        return Results.json()
-                .render(Observable.just("x1",false))
-                .render(Observable.just(1))
-                .render(Observable.just(m))
-                .render(Observable.just(user));
+    public Result hello(@Param("name") String name,@Param("ss") String ss, Context context) throws InterruptedException {
+        System.out.println(context.getRoutingContext().getBodyAsString());
+//        Long s = context.getRoutingContext().request();
+//        System.out.println(s);
+        return Results.json().render(Observable.just(1));
     }
 
+    public Result index(Context context) {
+        context.getRoutingContext().put("hello","wangziqing");
+        JsonObject jsonObject = new JsonObject();
+        return Results.html().render(Observable.just(jsonObject.put("name", "thymeleaf!")));
+    }
 
+    public Result test() {
+        return Results.html().render(Observable.just(new JsonObject().put("name", "thymeleaf!")));
+    }
+    public static void main(String[] args) {
+        JsonObject jsonObject = new JsonObject();
 
+        System.out.println(jsonObject instanceof Map);
+    }
     public class User {
         private String name;
         private String pass;

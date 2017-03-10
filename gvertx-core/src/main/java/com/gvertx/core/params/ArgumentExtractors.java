@@ -21,12 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.gvertx.core.Route;
-import com.gvertx.core.extractors.ParamExtractor;
-import com.gvertx.core.extractors.PathParamExtractor;
 import com.gvertx.core.models.Context;
-import rx.Observable;
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -47,110 +42,6 @@ public class ArgumentExtractors {
                     .build();
 
 
-    private void just(){
-
-    }
-
-    public void consumer(){
-        Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-               System.out.println(Thread.currentThread().getName());
-                subscriber.onNext("MultiThreading");
-                subscriber.onCompleted();
-            }
-        }).subscribeOn(Schedulers.io())
-//                .observeOn(ArgumentExtractors.main();)
-                .subscribe(s -> {
-                    System.out.println(Thread.currentThread().getName()+":"+s);
-                });
-
-    }
-
-    private Object slowBlockingMethod() {
-        try {
-            System.out.println(Thread.activeCount());
-            Thread.sleep(2000l);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("blocking method");
-        return Observable.just("ww");
-    }
-
-    public Observable<Object> newMethod() {
-        return Observable.defer(() -> Observable.just(slowBlockingMethod()));
-    }
-
-    public Observable controller(){
-
-        newMethod().subscribe(result->{
-            Observable.just("ww");
-        },error->{
-
-        });
-        return null;
-    }
-    public static void main(String[] args) {
-
-//        ArgumentExtractors a = new ArgumentExtractors();
-//        a.newMethod().subscribe(result->{
-//            System.out.println(Thread.activeCount());
-//
-//            System.out.println(result);
-//        });
-//        System.out.println("start");
-//        System.out.println(Thread.activeCount());
-
-
-
-//        ArgumentExtractors a = new ArgumentExtractors();
-//        Observable.zip(
-//                a.x1(),
-//                a.x2(),
-//                a.x2(),
-//                (photo, metadata,x) -> Observable.just(""))
-//                .subscribe(photoWithData -> System.out.println(photoWithData));
-//
-//        Observable x = Observable.never();
-//        x.just("www");
-////        Observable x = Observable.create((subscriber -> {
-////            subscriber.onStart();
-////        }));
-//        x.flatMap(r->{
-//            System.out.println("ww");
-//
-//            return Observable.just(r+":w");
-//        }).subscribe(s -> {
-//            System.out.println("#"+s);
-//        });
-//
-//        Observable<String> observable = Observable.just("dd");
-//
-//        observable.subscribe(xx->{
-//            System.out.println(xx);
-//        },err->{
-//            System.out.println(err);
-//        },()->{
-//            System.out.println("done");
-//        });
-
-//        CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("ddd");
-//        completableFuture.whenComplete((s, throwable) -> {
-//            System.out.println(s);
-//            completableFuture.complete("ww");
-//        }).whenComplete((s, throwable) -> {
-//            System.out.println(s);
-//        });
-//        Future future = Future.future();
-//        future.setHandler(asyncResult -> {
-//            System.out.println(1);
-//           System.out.println(asyncResult);
-//        });
-//        Observable<String> observable = Observable.just("");
-//        observable.subscribe(xx->{});
-//        future.complete("ss");
-    }
     public static class ContextExtractor implements ArgumentExtractor<Object> {
         @Override
         public void extract(ArgumentExtractorChain<Object> argumentExtractorChain, Context context) {
@@ -192,21 +83,15 @@ public class ArgumentExtractors {
         if (extractor == null) {
             // See if we have a WithArgumentExtractor annotated annotation
             for (Annotation annotation : annotations) {
-                if (annotation instanceof Param) {
-                    extractor = new ParamExtractor(((Param) annotation).value(), methodParameter.parameterClass);
-                    continue;
-                } else if (annotation instanceof PathParam) {
-                    extractor = new PathParamExtractor(((PathParam) annotation).value(), methodParameter.parameterClass);
-                    continue;
-                } else {
-                    WithArgumentExtractor withArgumentExtractor = annotation.annotationType()
-                            .getAnnotation(WithArgumentExtractor.class);
-                    if (withArgumentExtractor != null) {
-                        extractor = instantiateComponent(withArgumentExtractor.value(), annotation,
-                                methodParameter.parameterClass, injector);
-                        break;
-                    }
+
+                WithArgumentExtractor withArgumentExtractor = annotation.annotationType()
+                        .getAnnotation(WithArgumentExtractor.class);
+                if (withArgumentExtractor != null) {
+                    extractor = instantiateComponent(withArgumentExtractor.value(), annotation,
+                            methodParameter.parameterClass, injector);
+                    break;
                 }
+
             }
         }
 
@@ -244,12 +129,14 @@ public class ArgumentExtractors {
                 throw new RuntimeException(e);
             }
         }
+
+//        return  injector.getInstance(argumentExtractor);
         // Complex case, use Guice.  Create a child injector with the annotation in it.
         return injector.createChildInjector(new AbstractModule() {
             @Override
             protected void configure() {
                 bind((Class<Annotation>) annotation.annotationType()).toInstance(annotation);
-//                bind(ArgumentClassHolder.class).toInstance(new ArgumentClassHolder(paramType));
+                bind(ArgumentClassHolder.class).toInstance(new ArgumentClassHolder(paramType));
             }
         }).getInstance(argumentExtractor);
     }

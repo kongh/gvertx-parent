@@ -18,7 +18,8 @@
     </developers>
 
     <properties>
-        <vertx.version>3.3.3</vertx.version>
+        <vertx.version>3.4.0</vertx.version>
+        <protostuff.version>1.5.2</protostuff.version>
     </properties>
 
     <modules>

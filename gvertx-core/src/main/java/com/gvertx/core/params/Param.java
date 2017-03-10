@@ -16,6 +16,8 @@
 
 package com.gvertx.core.params;
 
+import com.gvertx.core.extractors.ParamExtractor;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,6 +27,7 @@ import java.lang.annotation.Target;
  * @author wangziqing
  *
  */
+@WithArgumentExtractor(ParamExtractor.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER})
 public @interface Param {

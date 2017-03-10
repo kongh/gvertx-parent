@@ -21,6 +21,7 @@ import com.gvertx.core.utils.WriteHelp;
 import com.gvertx.core.models.Context;
 import com.gvertx.core.models.Result;
 import io.vertx.rxjava.core.Vertx;
+import io.vertx.rxjava.ext.web.templ.ThymeleafTemplateEngine;
 
 /**
  * Implementation of the filter chain
@@ -30,11 +31,13 @@ public class FilterChainImpl implements FilterChain {
     private final Provider<? extends Filter> filterProvider;
     private final FilterChain next;
     private final Vertx vertx;
+    private final ThymeleafTemplateEngine engine;
 
-    public FilterChainImpl(Provider<? extends Filter> filterProvider, FilterChain next, Vertx vertx) {
+    public FilterChainImpl(Provider<? extends Filter> filterProvider, FilterChain next, Vertx vertx,ThymeleafTemplateEngine engine) {
         this.filterProvider = filterProvider;
         this.next = next;
         this.vertx = vertx;
+        this.engine = engine;
     }
 
     @Override
@@ -44,6 +47,6 @@ public class FilterChainImpl implements FilterChain {
 
     @Override
     public void end(Context context, Result result) {
-        WriteHelp.end(context.getRoutingContext(), result, vertx);
+        WriteHelp.end(context.getRoutingContext(), result, vertx ,engine);
     }
 }

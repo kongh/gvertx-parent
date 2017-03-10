@@ -2,7 +2,10 @@ package com.gvertx.core;
 
 
 import com.gvertx.core.guice.GuiceVerticleFactory;
-import io.vertx.core.*;
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
@@ -24,23 +27,25 @@ public class Gvertx {
     private Vertx vertx;
 
     public static void main(String[] args) {
+
+        System.setProperty("cglib.debugLocation", "/Users/wangziqing/github/gvertx-parent/gvertx-metrics/target/classes");
+
         new Gvertx().run();
     }
 
     public void run(){
-        config();
-        deploy();
+        config().deploy();
     }
     private Gvertx config(){
         options = new VertxOptions();
-
+//        options.setMetricsOptions(new MetricsOptions().setEnabled(true));
 //
 //        if (ninjaProperties.getBooleanWithDefault(VERTX_IS_METRICS_ENABLED, false)) {
 //            options.setMetricsOptions(new MetricsOptions().setEnabled(true));
 //        }
 
-        deploymentOptions = new DeploymentOptions();
-        //.setInstances(ninjaProperties.getIntegerWithDefault(VERTX_INSTANCES, 1));
+        deploymentOptions = new DeploymentOptions()
+                .setInstances(1);
 
 //        if (ninjaProperties.getBooleanWithDefault(VERTX_IS_WORKER, true)) {
 //            deploymentOptions
@@ -67,7 +72,7 @@ public class Gvertx {
     private void deploy(){
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        Handler<AsyncResult<String>> handler = stringAsyncResult -> {
+        Handler handler = stringAsyncResult -> {
             countDownLatch.countDown();
         };
 

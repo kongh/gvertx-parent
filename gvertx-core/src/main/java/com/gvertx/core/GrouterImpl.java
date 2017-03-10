@@ -87,6 +87,7 @@ public class GrouterImpl implements Grouter {
                 continue;
             }
             routeBuilder.buildRoute(injector);
+
             io.vertx.rxjava.ext.web.Route ret = null;
             switch (routeBuilder.getHttpMethod()) {
                 case GET:

@@ -29,6 +29,7 @@ import com.gvertx.core.Grouter;
 import com.gvertx.core.GrouterImpl;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.core.eventbus.EventBus;
+import io.vertx.rxjava.ext.web.templ.ThymeleafTemplateEngine;
 
 /**
  * Guice {@link AbstractModule} for vertx and container injections
@@ -49,5 +50,6 @@ public class GuiceVertxBinder extends AbstractModule {
         bind(Vertx.class).toInstance(vertx);
         bind(Grouter.class).to(GrouterImpl.class).in(Singleton.class);
         bind(EventBus.class).toInstance(vertx.eventBus());
+        bind(ThymeleafTemplateEngine.class).toInstance(ThymeleafTemplateEngine.create());
     }
 }

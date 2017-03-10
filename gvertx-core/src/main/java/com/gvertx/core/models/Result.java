@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.gvertx.core.utils.DateUtil;
+import rx.Observable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -542,5 +543,13 @@ public class Result {
 
     public rx.Observable getObservable() {
         return observable;
+    }
+
+    public void setObservable(Observable observable) {
+        this.observable = observable;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
     }
 }

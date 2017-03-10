@@ -7,6 +7,7 @@ import com.gvertx.core.params.*;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.Vertx;
+import io.vertx.rxjava.ext.web.templ.ThymeleafTemplateEngine;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -46,6 +47,7 @@ public class RouteBuilderImpl implements RouteBuilder {
 
 
 
+
     public RouteBuilderImpl buildRoute(Injector injector) {
         if (controller == null) {
             log.error("Error in route configuration for {}", path);
@@ -73,7 +75,10 @@ public class RouteBuilderImpl implements RouteBuilder {
 
         this.filterChain = buildFilterChain(
                 filters,
-                buildExtractorChain(route.getArgumentExtractors(), 0, lastindex, route, injector.getInstance(Vertx.class)),
+                buildExtractorChain(
+                        route.getArgumentExtractors(), 0,
+                        lastindex, route, injector.getInstance(Vertx.class) ,
+                        injector.getInstance(ThymeleafTemplateEngine.class)),
                 injector);
 
         this.parameters = new Object[route.getArgumentExtractors().length];
@@ -83,9 +88,9 @@ public class RouteBuilderImpl implements RouteBuilder {
     static private ArgumentExtractorChain buildExtractorChain(ArgumentExtractor[] extractors,
                                                               int index,
                                                               final int lastindex,
-                                                              Route route, Vertx vertx) {
+                                                              Route route, Vertx vertx , ThymeleafTemplateEngine engine) {
         if (lastindex == -1 || index > lastindex) {
-            return new ArgumentExtractorEndChainImpl(route, --index, vertx);
+            return new ArgumentExtractorEndChainImpl(route, --index, vertx, engine);
         } else {
             ArgumentExtractor extractor = extractors[index];
             if (null == extractor) {
@@ -96,7 +101,7 @@ public class RouteBuilderImpl implements RouteBuilder {
                 }
             }
             return new ArgumentExtractorChainImpl(extractor, index - 1,
-                    buildExtractorChain(extractors, ++index, lastindex, route, vertx) , vertx);
+                    buildExtractorChain(extractors, ++index, lastindex, route, vertx ,engine), vertx ,engine);
         }
     }
 
@@ -104,13 +109,13 @@ public class RouteBuilderImpl implements RouteBuilder {
                                                 ArgumentExtractorChain extractorChain,
                                                 Injector injector) {
         if (filters.isEmpty()) {
-            return new FilterChainEndImpl(extractorChain,injector.getInstance(Vertx.class));
+            return new FilterChainEndImpl(extractorChain, injector.getInstance(Vertx.class), injector.getInstance(ThymeleafTemplateEngine.class));
         } else {
             Class<? extends Filter> filter = filters.pop();
 
             return new FilterChainImpl(injector.getProvider(filter),
                     buildFilterChain(filters, extractorChain, injector),
-                    injector.getInstance(Vertx.class));
+                    injector.getInstance(Vertx.class), injector.getInstance(ThymeleafTemplateEngine.class));
         }
     }
 

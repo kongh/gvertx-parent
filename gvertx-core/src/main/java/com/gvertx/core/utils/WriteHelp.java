@@ -3,10 +3,13 @@ package com.gvertx.core.utils;
 import com.google.common.collect.Maps;
 import com.gvertx.core.models.Result;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.core.RxHelper;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.core.http.HttpServerResponse;
 import io.vertx.rxjava.ext.web.RoutingContext;
+import io.vertx.rxjava.ext.web.templ.ThymeleafTemplateEngine;
+import rx.Observable;
 import rx.Subscriber;
 
 import java.util.Map;
@@ -16,7 +19,10 @@ import java.util.Map;
  */
 public abstract class WriteHelp {
 
-    public final static void end(RoutingContext routingContext, Result result, Vertx vertx){
+    public final static void end(RoutingContext routingContext, Result result, Vertx vertx, ThymeleafTemplateEngine engine) {
+        if(null == result.getObservable()){
+            result.setObservable(Observable.empty());
+        }
         result.getObservable()
                 .subscribeOn(RxHelper.blockingScheduler(vertx)).observeOn(RxHelper.scheduler(vertx))
                 .subscribe(new Subscriber<Object>() {
@@ -26,7 +32,7 @@ public abstract class WriteHelp {
                     @Override
                     public void onCompleted() {
                         System.out.println(String.format("onCompleted:%s,activeCount:%s", Thread.currentThread().getName(), Thread.activeCount()));
-                        endResult(routingContext, result, map == null ? result : map);
+                        endResult(routingContext, result, map == null ? resultObj : map, engine);
                     }
 
                     @Override
@@ -65,16 +71,36 @@ public abstract class WriteHelp {
                 });
     }
 
-    private static void endResult(RoutingContext routingContext, Result result,Object content) {
-        System.out.println(String.format("end-subscribeOn:%s,activeCount:%s",Thread.currentThread().getName(),Thread.activeCount()));
+    private static void endResult(RoutingContext routingContext, Result result, Object content, ThymeleafTemplateEngine engine) {
+        System.out.println(String.format("end-subscribeOn:%s,activeCount:%s", Thread.currentThread().getName(), Thread.activeCount()));
         HttpServerResponse response = routingContext.response();
         for (Map.Entry<String, String> header : result.getHeaders().entrySet()) {
             response.putHeader(header.getKey(), header.getValue());
         }
-        response
-                .setStatusCode(result.getStatusCode())
-                .putHeader("content-type", String.format("%s; %s", result.getContentType(), result.getCharset()))
-                .end(Json.encodePrettily(content));
+        if (result.getContentType().equals(Result.TEXT_HTML)) {
+            Map<String, Object> map = null;
+            if(content instanceof JsonObject){
+                JsonObject jsonObject = (JsonObject)content;
+                map = jsonObject.getMap();
+            }else if (content instanceof Map) {
+                map = (Map) content;
+            }
+            if(null != map){
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    routingContext.put(entry.getKey(), entry.getValue());
+                }
+            }
+            engine.rxRender(routingContext, result.getTemplate()).subscribe(res -> {
+                response.end(res);
+            }, err -> {
+                routingContext.fail(err);
+            });
+        } else {
+            response
+                    .setStatusCode(result.getStatusCode())
+                    .putHeader("content-type", String.format("%s; %s", result.getContentType(), result.getCharset()))
+                    .end(Json.encodePrettily(content));
+        }
     }
 
 }

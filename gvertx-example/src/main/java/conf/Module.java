@@ -18,13 +18,12 @@ package conf;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import test.Ka;
 
 @Singleton
 public class Module extends AbstractModule {
 
     protected void configure() {
-        bind(Ka.class);
+//        bind(Ka.class);
 //        install(new GuiceVertxBinder());
     }
 }
