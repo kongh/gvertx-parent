@@ -112,6 +112,9 @@ public class GrouterImpl implements Grouter {
                     ret = router.options(routeBuilder.getPath());
                     break;
             }
+            ret.handler(routingContext -> {
+
+            });
             ret.handler(routingContext -> routeBuilder.getFilterChain().
                     next(new Context(routingContext,routeBuilder.getParameters())));
         }

@@ -10,8 +10,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.gvertx.metrics</groupId>
-    <artifactId>gvertx-metrics</artifactId>
+    <groupId>com.gvertx.rpc</groupId>
+    <artifactId>gvertx-rpc</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
