@@ -23,7 +23,7 @@
     </properties>
 
     <modules>
-        <module>gvertx-core</module>
+        <module>gvertx-web</module>
         <module>gvertx-example</module>
     </modules>
 
