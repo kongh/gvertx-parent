@@ -1,9 +1,9 @@
 package filters;
 
-import com.gvertx.core.models.Context;
-import com.gvertx.core.models.Results;
-import com.gvertx.core.params.Filter;
-import com.gvertx.core.params.FilterChain;
+import com.gvertx.web.models.Context;
+import com.gvertx.web.models.Results;
+import com.gvertx.web.params.Filter;
+import com.gvertx.web.params.FilterChain;
 import rx.Observable;
 
 /**
@@ -15,4 +15,6 @@ public class MethFilter implements Filter {
         filterChain.next(context);
         filterChain.end(context, Results.ok().json().render(Observable.just("w")));
     }
+
+
 }

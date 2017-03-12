@@ -1,11 +1,11 @@
 package controllers;
 
 import com.google.inject.Singleton;
-import com.gvertx.core.models.Context;
-import com.gvertx.core.models.Result;
-import com.gvertx.core.models.Results;
-import com.gvertx.core.params.FilterWith;
-import com.gvertx.core.params.Param;
+import com.gvertx.web.models.Context;
+import com.gvertx.web.models.Result;
+import com.gvertx.web.models.Results;
+import com.gvertx.web.params.FilterWith;
+import com.gvertx.web.params.Param;
 import filters.TestFilter;
 import io.vertx.core.json.JsonObject;
 import rx.Observable;
@@ -31,16 +31,24 @@ public class TestController {
     }
 
     //@FilterWith(MethFilter.class)
-    public Result hello(@Param("name") String name,@Param("ss") String ss, Context context) throws InterruptedException {
+    public Result hello(@Param("name") String name,@Param("ss") Long ss, Context context) throws InterruptedException {
         System.out.println(context.getRoutingContext().getBodyAsString());
 //        Long s = context.getRoutingContext().request();
 //        System.out.println(s);
         return Results.json().render(Observable.just(1));
     }
 
+    public Result hello2(@Param("name") String name,@Param("ss") Long ss, Context context) throws InterruptedException {
+        System.out.println(context.getRoutingContext().getBodyAsString());
+//        Long s = context.getRoutingContext().request();
+//        System.out.println(s);
+        return Results.json().render(Observable.just(2));
+    }
+
     public Result index(Context context) {
         context.getRoutingContext().put("hello","wangziqing");
         JsonObject jsonObject = new JsonObject();
+//        Observable.defer(a->)
         return Results.html().render(Observable.just(jsonObject.put("name", "thymeleaf!")));
     }
 

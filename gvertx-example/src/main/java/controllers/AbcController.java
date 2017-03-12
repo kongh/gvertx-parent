@@ -1,8 +1,8 @@
 package controllers;
 
 import com.google.inject.Singleton;
-import com.gvertx.core.models.Result;
-import com.gvertx.core.params.FilterWith;
+import com.gvertx.web.models.Result;
+import com.gvertx.web.params.FilterWith;
 import filters.TestFilter;
 import models.CurrentRequest;
 

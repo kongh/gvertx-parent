@@ -14,6 +14,14 @@
     <packaging>jar</packaging>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>com.gvertx.web</groupId>
+            <artifactId>gvertx-web</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <resources>
             <resource>
@@ -81,7 +89,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.gvertx.core.Gvertx</mainClass>
+                                    <mainClass>com.gvertx.web.Gvertx</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -112,12 +120,5 @@
             </plugin>
         </plugins>
     </build>
-    <dependencies>
 
-        <dependency>
-            <groupId>com.gvertx.core</groupId>
-            <artifactId>gvertx-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
 </project>

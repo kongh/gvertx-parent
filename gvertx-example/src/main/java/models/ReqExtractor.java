@@ -1,10 +1,9 @@
 package models;
 
 import com.google.inject.Inject;
-import com.gvertx.core.models.Context;
-import com.gvertx.core.params.ArgumentExtractor;
-import com.gvertx.core.params.ArgumentExtractorChain;
-import io.vertx.core.Vertx;
+import com.gvertx.web.models.Context;
+import com.gvertx.web.params.ArgumentExtractor;
+import com.gvertx.web.params.ArgumentExtractorChain;
 
 /**
  * Created by wangziqing on 17/2/18.

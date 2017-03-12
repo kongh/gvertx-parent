@@ -1,10 +1,8 @@
 package filters;
 
-import com.google.inject.Inject;
-import com.gvertx.core.models.Context;
-import com.gvertx.core.params.Filter;
-import com.gvertx.core.params.FilterChain;
-import io.vertx.rxjava.core.Vertx;
+import com.gvertx.web.models.Context;
+import com.gvertx.web.params.Filter;
+import com.gvertx.web.params.FilterChain;
 
 /**
  * Created by wangziqing on 17/2/20.

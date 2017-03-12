@@ -1,7 +1,7 @@
 package models;
 
 
-import com.gvertx.core.params.WithArgumentExtractor;
+import com.gvertx.web.params.WithArgumentExtractor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
