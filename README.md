@@ -1,5 +1,5 @@
 # gvertx
-`基于vertx 构建一站式的 reactive框架 `
+`基于guice and vertx 构建一站式的 reactive框架 `
 
 ## reset verticle
 	@Instance(val = 10)
