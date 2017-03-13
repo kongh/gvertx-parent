@@ -39,10 +39,10 @@ public class Runner {
         new Runner().run();
     }
 
-    public void run(){ new Runner().init().deploy();}
+    public void run(){ this.init().deploy();}
     public void run(String ... verticles){
         this.verticles = verticles;
-        run();
+        this.init().deploy();
     }
 
     public void run(Class<? extends Verticle> ... verticles){
@@ -52,7 +52,7 @@ public class Runner {
                 this.verticles[i] = verticles[i].getName();
             }
         }
-        run();
+        this.init().deploy();
     }
     private Runner init() {
         options = new VertxOptions();

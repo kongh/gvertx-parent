@@ -26,7 +26,7 @@ public abstract class RestAbstractVerticle implements Verticle {
     private Provider<RouterHelp> routerHelpProvider;
 
 
-    private RouterHelp routerHelp;
+    protected RouterHelp routerHelp;
     protected Router router;
 
     public RestAbstractVerticle(){
